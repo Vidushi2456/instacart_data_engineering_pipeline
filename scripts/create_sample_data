@@ -1,0 +1,44 @@
+import pandas as pd
+import os
+
+# 👉 Downloads path
+DOWNLOADS_PATH = r"C:\Users\DELL\Downloads\dataset"
+
+# 👉project data folder
+OUTPUT_PATH = r"C:\Users\DELL\OneDrive\Desktop\instacart_data_engineering_pipeline\data"
+
+# number of rows for sample
+SAMPLE_SIZE = 5000
+
+files = [
+    "orders.csv",
+    "order_products__prior.csv",
+    "products.csv",
+    "aisles.csv",
+    "departments.csv"
+]
+
+def create_sample(file_name):
+    input_file = os.path.join(DOWNLOADS_PATH, file_name)
+
+    if not os.path.exists(input_file):
+        print(f"File NOT found: {file_name}")
+        return
+
+    output_file = os.path.join(OUTPUT_PATH, file_name.replace(".csv", "_sample.csv"))
+
+    print(f"Processing {file_name}...")
+
+    # 🔥 IMPORTANT: read only first N rows (no full load)
+    df_sample = pd.read_csv(input_file, nrows=SAMPLE_SIZE)
+
+    df_sample.to_csv(output_file, index=False)
+
+    print(f"Saved: {output_file}")
+
+
+if __name__ == "__main__":
+    for file in files:
+        create_sample(file)
+
+    print("\n Done!")
